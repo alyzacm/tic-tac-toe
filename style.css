@@ -14,6 +14,7 @@ body{
     background-color: var(--light-rose);
 }
 
+
 h1{
     font-family: 'Pacifico', cursive;
     font-size: 4rem;
@@ -21,9 +22,12 @@ h1{
     margin: 20px auto;
 }
 
+.hide-gameboard{
+    /*display: none;*/
+}
+
 #center{
-    display: flex;
-    justify-content: center;
+    
 }
 
 #board{
@@ -48,12 +52,59 @@ h1{
     color: var(--gray);
 }
 
-.cell:hover{
+.free:hover{
     background-color: var(--light-gray);
 }
 
 #message{
     text-align: center;
-    padding: 20px;
-    font-size: 1.75rem;
+    padding-top: 25px;
+    padding-bottom: 35px;
+    font-size: 2rem;
+    color: var(--gray);
+}
+
+#message.won{
+    color: black;
+}
+
+.restart-btn{
+    font-family: inherit;
+    height: 50px;
+    width: 160px;
+    border-radius: 8px;
+    border: 1px solid black;
+    background-color: black;
+    color: var(--cream);
+    font-size: 1.9rem;
+    cursor: pointer;
+}
+
+.restart-btn:hover{
+    background-color: var(--gray);
+    border: 1px solid var(--gray);
+}
+
+#btn-holder{
+    display: flex;
+    justify-content: center;
+}
+
+#modes {
+    display:none;
+    /*display: flex;*/
+    justify-content: center;
+
+}
+
+.modes{
+    height: 100px;
+    width: 250px;
+    border-radius: 8px;
+    border: 1px solid black;
+    background-color: var(--cream);
+    text-align: center;
+    /*color: var(--cream);*/
+    font-size: 1.9rem;
+    cursor: pointer;
 }

@@ -10,24 +10,33 @@
     
     <body> 
         <h1>Tic Tac Toe</h1>
-        <div id="center">
-            <div id="board">
-                <div class = "cell">X</div>
-                <div class = "cell">O</div>
-                <div class = "cell"></div>
-                <div class = "cell"></div>
-                <div class = "cell"></div>
-                <div class = "cell"></div>
-                <div class = "cell"></div>
-                <div class = "cell"></div>
-                <div class = "cell"></div>
+        <div class="hide-gameboard">
+
+         
+            <div id="center">
+                <div id="board">
+                    <div class = "cell free" data-index = "0"></div>
+                    <div class = "cell free" data-index = "1"></div>
+                    <div class = "cell free" data-index = "2"></div>
+                    <div class = "cell free" data-index = "3"></div>
+                    <div class = "cell free" data-index = "4"></div>
+                    <div class = "cell free" data-index = "5"></div>
+                    <div class = "cell free" data-index = "6"></div>
+                    <div class = "cell free" data-index = "7"></div>
+                    <div class = "cell free" data-index = "8"></div>
+                </div>
+
+
             </div>
-
-
+            <div id="message">Player X's turn</div>
+            <div id="btn-holder">
+                <button class="restart-btn">Restart</button>
+            </div>
         </div>
-        <div id="message">Player X turn</div>
-
-        <div id="mode"></div>
+        <div id="modes">
+            <div id="human" class="modes">Player vs Player</div>
+            <div id="ai" class="modes">Player vs Bot</div>
+        </div>
     </body>
  
     <script src="main.js"></script>

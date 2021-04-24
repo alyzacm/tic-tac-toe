@@ -17,7 +17,7 @@ const gameboard = (function() {
 
     const resetArray = () => {
         for (let i = 0; i < boardArr.length; i++){
-            board[i] = '';
+            boardArr[i] = '';
         }
     };
 
@@ -42,37 +42,112 @@ const gameboard = (function() {
                 winner = c0;
             }
         });
-        return { winner }
+        return winner || (boardArr.includes('') ? null : "tie");
     }; 
 
-    return { setMark, getMark, resetArray, checkWinner};
+    return { 
+        setMark, getMark, resetArray, checkWinner
+    };
 })();
 
-const Player = (mark) => {
-    
-    // getName = () => name;
+const Player = (mark) => {    
     getMark = () => mark;
 
-    // const sayName = () => console.log(`Player ${mark} is ${name}`);
-    // return{
-    //     sayName 
-    // };
-
    return{
-        // getName,
-        // sayName,
         getMark
    }
 }; 
 
 const displayController = (function() {
-    const gameboard = document.querySelector('#board');
+    const board = document.querySelector('#board');
     const cells = Array.from(document.querySelectorAll('.cell'));
+    const message = document.querySelector('#message');
+    const restart = document.querySelector('.restart-btn');
 
+    board.addEventListener("click" , (e) => {
+        if(gameController.isDone() || e.target.textContent !== ''){ 
+            return;
+        }
+        gameController.gameRound(parseInt(e.target.dataset.index));
+        e.target.classList.remove("free");
+        renderBoard();
+    });
+
+    const setResults = (msg) => {
+        setMessage(msg);
+        message.classList.add("won");
+    }
+
+    const setMessage = (msg) => {
+        message.textContent = msg;
+    }
+
+    const resetBoard = () => {
+        cells.forEach((cell)  => {
+            cell.classList.add('free');
+        });    
+    }
+
+    const renderBoard = () => {
+        for(let i = 0; i < cells.length; i++){
+            cells[i].textContent = gameboard.getMark(i);
+
+        }
+    };
+
+    const resetGame = () => {
+        gameboard.resetArray();
+        gameController.resetGame();
+        resetBoard();
+        renderBoard();
+        displayController.setMessage("Player X's turn");
+        message.classList.remove("won");
+    }
+    restart.addEventListener("click", resetGame)
+
+    return { 
+        renderBoard, setMessage, setResults 
+    };
 })();
 
 const gameController = (function() {
-    let curPlayer = null;
-    let Player 
-})();
+    let playerX = Player("X");
+    let playerO = Player("O"); 
+    let curPlayer = playerX;
+    let isGameDone = false;
 
+    const changePlayer = () => {
+        curPlayer = curPlayer === playerX ? playerO : playerX;
+    };
+
+    const gameRound = (index) => {
+        gameboard.setMark(index, curPlayer.getMark());
+        let winner = gameboard.checkWinner();
+
+        if(winner === "tie"){
+            displayController.setResults("It's a tie!");
+            isGameDone = true;
+            
+        }
+        else if(winner !== "tie" && winner !== null){
+            displayController.setResults("Player " + winner + " is the Winner!");
+            isGameDone = true;
+        }
+        else{
+            changePlayer();
+            displayController.setMessage(`Player ${curPlayer.getMark()}'s turn`);
+        }
+    };
+
+    const isDone = () => {
+        return isGameDone;
+    };
+
+    const resetGame = () => {
+        isGameDone = false;
+    }
+
+    return { 
+        isDone, gameRound, resetGame 
+    };
+})();
