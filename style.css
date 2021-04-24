@@ -22,8 +22,12 @@ h1{
     margin: 20px auto;
 }
 
+button{
+    font-family: inherit;
+}
+
 .hide-gameboard{
-    /*display: none;*/
+    display: none;
 }
 
 #center{
@@ -90,21 +94,32 @@ h1{
     justify-content: center;
 }
 
-#modes {
-    display:none;
-    /*display: flex;*/
+#modes{
+    display: flex;
     justify-content: center;
-
+    align-items: center;
+    flex-direction: column;
+    height: 400px;
 }
 
-.modes{
+#modes.hide{
+    display:none;
+}
+
+.mode{
     height: 100px;
-    width: 250px;
+    width: 300px;
     border-radius: 8px;
-    border: 1px solid black;
+    border: none;
     background-color: var(--cream);
     text-align: center;
     /*color: var(--cream);*/
     font-size: 1.9rem;
     cursor: pointer;
+    margin: 20px;
+    line-height: 100px;
+}
+
+.mode:hover{
+        background-color: var(--light-gray);
 }

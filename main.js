@@ -63,6 +63,23 @@ const displayController = (function() {
     const cells = Array.from(document.querySelectorAll('.cell'));
     const message = document.querySelector('#message');
     const restart = document.querySelector('.restart-btn');
+    const modeBtns = document.querySelectorAll('.mode');
+    const game = document.querySelector('#game');
+    const modes = document.querySelector('#modes');
+
+    modeBtns.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            let m = e.target.id;
+            if(m === "human"){
+                modes.classList.add('hide');
+                game.classList.remove('hide-gameboard');
+
+
+            }
+            
+        })
+    })
+
 
     board.addEventListener("click" , (e) => {
         if(gameController.isDone() || e.target.textContent !== ''){ 
