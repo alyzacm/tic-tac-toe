@@ -42,11 +42,22 @@ const gameboard = (function() {
                 winner = c0;
             }
         });
-        return winner || (boardArr.includes('') ? null : "tie");
+        // return winner || (boardArr.includes('') ? null : "tie");
+        return (boardArr.includes('') ? winner : "tie");
     }; 
 
+    const getAvailableMoves = () => {
+        let availableMoves = [];
+        boardArr.filter((data, i) => {
+            if(data === ''){
+                availableMoves.push(i);
+            }
+        })
+        return availableMoves;
+    }
+
     return { 
-        setMark, getMark, resetArray, checkWinner
+        setMark, getMark, resetArray, checkWinner, getAvailableMoves
     };
 })();
 
@@ -62,33 +73,41 @@ const displayController = (function() {
     const board = document.querySelector('#board');
     const cells = Array.from(document.querySelectorAll('.cell'));
     const message = document.querySelector('#message');
-    const restart = document.querySelector('.restart-btn');
+    const restart = document.querySelector('#restart-btn');
     const modeBtns = document.querySelectorAll('.mode');
     const game = document.querySelector('#game');
-    const modes = document.querySelector('#modes');
+    const modeSelection = document.querySelector('#modes');
+    const changeMode = document.querySelector('#mode-btn');
+    let curMode;
 
     modeBtns.forEach((button) => {
         button.addEventListener('click', (e) => {
             let m = e.target.id;
             if(m === "human"){
-                modes.classList.add('hide');
-                game.classList.remove('hide-gameboard');
-
-
+                curMode = m;
             }
-            
+            else if(m === "ai"){
+                curMode = m;
+            } 
+            modeSelection.classList.add('hide');
+            game.classList.remove('hide-gameboard');
         })
     })
-
 
     board.addEventListener("click" , (e) => {
         if(gameController.isDone() || e.target.textContent !== ''){ 
             return;
         }
-        gameController.gameRound(parseInt(e.target.dataset.index));
+        gameController.gameRound(curMode, parseInt(e.target.dataset.index));
         e.target.classList.remove("free");
         renderBoard();
     });
+
+    changeMode.addEventListener("click", () => {
+        resetGame();
+        modeSelection.classList.remove('hide');
+        game.classList.add('hide-gameboard');
+    })
 
     const setResults = (msg) => {
         setMessage(msg);
@@ -137,7 +156,26 @@ const gameController = (function() {
         curPlayer = curPlayer === playerX ? playerO : playerX;
     };
 
-    const gameRound = (index) => {
+    const changeTurn =  () => {
+        changePlayer();
+        displayController.setMessage(`Player ${curPlayer.getMark()}'s turn`);
+        console.log(curPlayer.getMark());
+        
+    }
+
+
+    const computerPlay = () => {
+        changeTurn();
+        let availableMoves = gameboard.getAvailableMoves();
+        let i = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+        setTimeout(function (){
+            gameboard.setMark(i, curPlayer.getMark());
+            displayController.renderBoard();
+            changeTurn();
+        }, 1000);
+    }
+
+    const gameRound = (curMode, index) => {
         gameboard.setMark(index, curPlayer.getMark());
         let winner = gameboard.checkWinner();
 
@@ -150,11 +188,22 @@ const gameController = (function() {
             displayController.setResults("Player " + winner + " is the Winner!");
             isGameDone = true;
         }
-        else{
-            changePlayer();
-            displayController.setMessage(`Player ${curPlayer.getMark()}'s turn`);
+        else if(winner === null && curMode === "ai"){
+            computerPlay();
         }
-    };
+        else{
+            changeTurn();
+        }
+    }
+
+    // const gameRound = (curMode, index) => {
+    //     if(curMode === "human"){
+    //         humanPlay(index);
+    //     }
+    //     else{
+    //         computerPlay(index);
+    //     }
+    // };
 
     const isDone = () => {
         return isGameDone;

@@ -17,7 +17,7 @@ body{
 
 h1{
     font-family: 'Pacifico', cursive;
-    font-size: 4rem;
+    font-size: 4.5rem;
     text-align: center;
     margin: 20px auto;
 }
@@ -63,7 +63,7 @@ button{
 #message{
     text-align: center;
     padding-top: 25px;
-    padding-bottom: 35px;
+    padding-bottom: 15px;
     font-size: 2rem;
     color: var(--gray);
 }
@@ -72,7 +72,7 @@ button{
     color: black;
 }
 
-.restart-btn{
+.btn{
     font-family: inherit;
     height: 50px;
     width: 160px;
@@ -82,9 +82,10 @@ button{
     color: var(--cream);
     font-size: 1.9rem;
     cursor: pointer;
+    margin: 20px;
 }
 
-.restart-btn:hover{
+.btn:hover{
     background-color: var(--gray);
     border: 1px solid var(--gray);
 }
@@ -99,7 +100,7 @@ button{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 400px;
+    height: 350px;
 }
 
 #modes.hide{
