@@ -1,3 +1,59 @@
+:root{
+    --cream: #F9F1F0;
+    /*--light-rose: #EED6D3;*/
+    --light-rose: #FADCD9;
+    /*--rose: #F8AFA6;*/
+    --light-gray: #B9B7BD;
+    --coral: #F79489;
+    --gray: #868B8E;
+    /*--gray: #6C6A61;*/
+}
+
 body{
+    font-family: 'Fredoka One', cursive;
+    background-color: var(--light-rose);
+}
+
+h1{
     font-family: 'Pacifico', cursive;
+    font-size: 4rem;
+    text-align: center;
+    margin: 20px auto;
+}
+
+#center{
+    display: flex;
+    justify-content: center;
+}
+
+#board{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: 364px;
+    height: 364px;
+    border: 6px solid black;
+    margin: 0px auto;
+    grid-gap: 2px;
+    background-color: black;
+}
+
+.cell{
+    background-color: var(--cream);
+    width: 120px;
+    height: 120px;
+    text-align: center;
+    user-select: none;
+    cursor: pointer;
+    font-size: 6rem;
+    color: var(--gray);
+}
+
+.cell:hover{
+    background-color: var(--light-gray);
+}
+
+#message{
+    text-align: center;
+    padding: 20px;
+    font-size: 1.75rem;
 }
