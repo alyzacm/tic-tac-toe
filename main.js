@@ -21,6 +21,10 @@ const gameboard = (function() {
         }
     };
 
+    const isBoardFull = () => {
+        return boardArr.includes('');
+    };
+
     const checkWinner = () => {
         let winner = null;
         const winArr = [
@@ -40,9 +44,10 @@ const gameboard = (function() {
                 (c0 === boardArr[combo[1]]) &&
                 (c0 === boardArr[combo[2]])){
                 winner = c0;
+                displayController.displayWin(combo);
             }
         });
-        return winner || (boardArr.includes('') ? null : "tie");
+        return winner || (isBoardFull() ? null : "tie");
     }; 
 
     const getAvailableMoves = () => {
@@ -120,6 +125,7 @@ const displayController = (function() {
     const resetBoard = () => {
         cells.forEach((cell)  => {
             cell.classList.add('free');
+            cell.classList.remove('won');
         });    
     }
 
@@ -129,6 +135,12 @@ const displayController = (function() {
 
         }
     };
+
+    const displayWin = (combo) => {
+        combo.forEach((i) => {
+            cells[i].classList.add('won');
+        })
+    }
 
     const resetGame = () => {
         gameboard.resetArray();
@@ -141,7 +153,7 @@ const displayController = (function() {
     restart.addEventListener("click", resetGame)
 
     return { 
-        renderBoard, setMessage, setResults 
+        renderBoard, setMessage, setResults, displayWin 
     };
 })();
 
@@ -158,40 +170,14 @@ const gameController = (function() {
     const changeTurn =  () => {
         changePlayer();
         displayController.setMessage(`Player ${curPlayer.getMark()}'s turn`);
-        console.log(curPlayer.getMark());
-        
     }
-
-
-
-    // const gameRound = (curMode, index) => {
-    //     gameboard.setMark(index, curPlayer.getMark());
-    //     let winner = gameboard.checkWinner();
-
-    //     if(winner === "tie"){
-    //         displayController.setResults("It's a tie!");
-    //         isGameDone = true;
-            
-    //     }
-    //     else if(winner !== "tie" && winner !== null){
-    //         displayController.setResults("Player " + winner + " is the Winner!");
-    //         isGameDone = true;
-    //     }
-    //     else if(winner === null && curMode === "ai"){
-    //         computerPlay();
-    //     }
-    //     else{
-    //         changeTurn();
-    //     }
-    // }
 
     const getResults = () => {
         let winner = gameboard.checkWinner();
         if(winner === "tie"){
             displayController.setResults("It's a tie!");
             isGameDone = true;
-            return "tie";
-            
+            return "tie";           
         }
         else if(winner !== "tie" && winner !== null){
             displayController.setResults("Player " + winner + " is the Winner!");
@@ -211,7 +197,7 @@ const gameController = (function() {
             if(!getResults()){
                 changeTurn();
             }
-        }, 500);
+        }, 750);
     }
 
     const gameRound = (curMode, index) => {

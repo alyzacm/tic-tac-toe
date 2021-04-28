@@ -70,6 +70,11 @@ button{
 
 #message.won{
     color: black;
+
+}
+
+.won{
+    color: black;
 }
 
 .btn{
@@ -101,6 +106,7 @@ button{
     align-items: center;
     flex-direction: column;
     height: 350px;
+    padding: 50px;
 }
 
 #modes.hide{
@@ -114,7 +120,6 @@ button{
     border: none;
     background-color: var(--cream);
     text-align: center;
-    /*color: var(--cream);*/
     font-size: 1.9rem;
     cursor: pointer;
     margin: 20px;
