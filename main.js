@@ -213,38 +213,18 @@ const gameController = (function() {
         return moves[bestMove];
     }
 
-    // const minimaxScore = (results, depth) => {
-    //     if(results === 'X'){
-    //         return {score: depth - 10};
-    //     }
-    //     else if(results === 'O'){
-    //         return {score:10 - depth};
-    //     }
-    //     else if(results === "tie"){
-    //         return {score:0};
-    //     }
-    // }
-
     const minimax = (board, player, depth) => {
         let arr = board.getAvailableMoves();
         let results = board.checkWinner("minimax");
-        // if(arr.length === 0 || depth === 7){
-        //     return minimaxScore(results,depth)
-        // }
+
         if(results === 'X'){
-            return { 
-                score: depth - 10
-            };
+            return {score: depth - 10};
         }
         else if(results === 'O'){
-            return {
-                score: 10 - depth
-            };
+            return {score:10 - depth};
         }
         else if(results === "tie"){
-            return {
-                score: 0
-            };
+            return {score:0};
         }
 
         let moves = [];
@@ -269,16 +249,14 @@ const gameController = (function() {
 
     const computerPlay = (mode) => {
         changeTurn();
-        let wait;
+        let wait = 750;
         let availableMoves = gameboard.getAvailableMoves();
         let i;
         if(mode === "easy"){
             i = availableMoves[Math.floor(Math.random() * availableMoves.length)];
-            wait = 750;
         }
         else if(mode === "hard"){
             i = minimax(gameboard, playerO, 0).index;
-            wait = 750;
         }
 
         setTimeout(function (){
