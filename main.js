@@ -25,7 +25,7 @@ const gameboard = (function() {
         return boardArr.includes('');
     };
 
-    const checkWinner = () => {
+    const checkWinner = (mode) => {
         let winner = null;
         const winArr = [
             [0, 1, 2],
@@ -44,6 +44,7 @@ const gameboard = (function() {
                 (c0 === boardArr[combo[1]]) &&
                 (c0 === boardArr[combo[2]])){
                 winner = c0;
+            if(mode != "minimax")
                 displayController.displayWin(combo);
             }
         });
@@ -81,7 +82,7 @@ const displayController = (function() {
     const modeBtns = document.querySelectorAll('.mode');
     const game = document.querySelector('#game');
     const modeSelection = document.querySelector('#modes');
-    const changeMode = document.querySelector('#mode-btn');
+    const backToModes = document.querySelector('#mode-btn');
     let curMode;
 
     modeBtns.forEach((button) => {
@@ -90,9 +91,12 @@ const displayController = (function() {
             if(m === "human"){
                 curMode = m;
             }
-            else if(m === "ai"){
+            else if(m === "easy"){
                 curMode = m;
             } 
+            else if(m === "hard"){
+                curMode = m;
+            }
             modeSelection.classList.add('hide');
             game.classList.remove('hide-gameboard');
         })
@@ -102,12 +106,11 @@ const displayController = (function() {
         if(gameController.isDone() || e.target.textContent !== ''){ 
             return;
         }
-        gameController.gameRound(curMode, parseInt(e.target.dataset.index));
         e.target.classList.remove("free");
-        renderBoard();
+        gameController.gameRound(curMode, parseInt(e.target.dataset.index));
     });
 
-    changeMode.addEventListener("click", () => {
+    backToModes.addEventListener("click", () => {
         resetGame();
         modeSelection.classList.remove('hide');
         game.classList.add('hide-gameboard');
@@ -177,37 +180,129 @@ const gameController = (function() {
         if(winner === "tie"){
             displayController.setResults("It's a tie!");
             isGameDone = true;
-            return "tie";           
+            return winner;           
         }
         else if(winner !== "tie" && winner !== null){
             displayController.setResults("Player " + winner + " is the Winner!");
             isGameDone = true;
-            return "winner";
+            return winner;
         }
         return null;       
     }
 
-    const computerPlay = () => {
+    const findBestMove = (moves, player) => {
+        let bestMove;
+        if(player === playerO){
+            let bestScore = -10000;
+            for(let i = 0; i < moves.length; i++){
+                if(moves[i].score > bestScore){
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+        else{
+            let bestScore = 10000;
+            for(let i = 0; i < moves.length; i++){
+                if(moves[i].score < bestScore){
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+        return moves[bestMove];
+    }
+
+    // const minimaxScore = (results, depth) => {
+    //     if(results === 'X'){
+    //         return {score: depth - 10};
+    //     }
+    //     else if(results === 'O'){
+    //         return {score:10 - depth};
+    //     }
+    //     else if(results === "tie"){
+    //         return {score:0};
+    //     }
+    // }
+
+    const minimax = (board, player, depth) => {
+        let arr = board.getAvailableMoves();
+        let results = board.checkWinner("minimax");
+        // if(arr.length === 0 || depth === 7){
+        //     return minimaxScore(results,depth)
+        // }
+        if(results === 'X'){
+            return { 
+                score: depth - 10
+            };
+        }
+        else if(results === 'O'){
+            return {
+                score: 10 - depth
+            };
+        }
+        else if(results === "tie"){
+            return {
+                score: 0
+            };
+        }
+
+        let moves = [];
+        for(let i = 0; i < arr.length; i++){
+            let move = {};
+            move.index = arr[i];
+            board.setMark(arr[i], player.getMark());
+
+            if(player === playerO){
+                let result = minimax(board, playerX, depth + 1);
+                move.score = result.score;
+            }
+            else{
+                let result = minimax(board, playerO, depth + 1);
+                move.score = result.score;
+            }
+            board.setMark(arr[i], '');
+            moves.push(move);
+        }
+        return findBestMove(moves, player);
+    }
+
+    const computerPlay = (mode) => {
         changeTurn();
+        let wait;
         let availableMoves = gameboard.getAvailableMoves();
-        let i = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+        let i;
+        if(mode === "easy"){
+            i = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+            wait = 750;
+        }
+        else if(mode === "hard"){
+            i = minimax(gameboard, playerO, 0).index;
+            wait = 750;
+        }
+
         setTimeout(function (){
             gameboard.setMark(i, curPlayer.getMark());
             displayController.renderBoard();
             if(!getResults()){
                 changeTurn();
             }
-        }, 750);
+        }, wait);
     }
 
     const gameRound = (curMode, index) => {
         gameboard.setMark(index, curPlayer.getMark());
+        displayController.renderBoard();
         let isDone = getResults();
+
         if(!isDone && curMode === "human"){
             changeTurn();
         }
-        else if(!isDone && curMode === "ai"){
-            computerPlay();  
+        else if(!isDone && curMode === "easy"){
+            computerPlay(curMode);  
+        }
+        else if(!isDone && curMode === "hard"){
+            computerPlay(curMode);
         }
     };
 
@@ -217,6 +312,7 @@ const gameController = (function() {
 
     const resetGame = () => {
         isGameDone = false;
+        curPlayer = playerX;
     }
 
     return { 

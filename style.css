@@ -115,7 +115,7 @@ button{
 
 .mode{
     height: 100px;
-    width: 300px;
+    width: 350px;
     border-radius: 8px;
     border: none;
     background-color: var(--cream);
@@ -125,6 +125,7 @@ button{
     margin: 20px;
     line-height: 100px;
 }
+
 
 .mode:hover{
         background-color: var(--light-gray);
